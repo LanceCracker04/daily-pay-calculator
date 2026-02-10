@@ -1,17 +1,20 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { GoogleAuthProvider } from "firebase/auth";
+export const googleProvider = new GoogleAuthProvider();
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "daily-pay-web.firebaseapp.com",
-  projectId: "daily-pay-web",
-  storageBucket: "daily-pay-web.appspot.com",
-  messagingSenderId: "955881293158",
-  appId: "1:955881293158:web:870b1958709f85fd5e74a7",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Initialize Auth and Export it!
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export default app;

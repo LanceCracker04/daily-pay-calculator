@@ -1,6 +1,9 @@
 
+import { signInWithPopup } from "firebase/auth";
+import { googleProvider } from "../firebase";
 import React, { useState } from 'react';
 import { auth } from '../firebase';
+import { useNavigate } from 'react-router-dom'; // Add this line
 import { 
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword 
@@ -8,6 +11,7 @@ import {
 import { Mail, Lock, LogIn, UserPlus, Loader2, AlertCircle, Wallet } from 'lucide-react';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +34,15 @@ const Login: React.FC = () => {
       setError(err.message || 'An error occurred during authentication.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      const navigate = useNavigate(); // Navigate to dashboard after success
+    } catch (error: any) {
+      setError(error.message);
     }
   };
 
@@ -104,6 +117,30 @@ const Login: React.FC = () => {
               )}
             </button>
           </form>
+
+          {/* Divider */}
+        <div className="relative my-8">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-100"></div>
+          </div>
+          <div className="relative flex justify-center text-xs uppercase tracking-widest font-bold">
+            <span className="px-4 bg-white text-slate-400">Or continue with</span>
+          </div>
+        </div>
+
+        {/* Google Button */}
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="w-full py-3.5 px-4 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-all flex items-center justify-center gap-3 shadow-sm"
+        >
+          <img 
+            src="https://www.svgrepo.com/show/475656/google-color.svg" 
+            alt="Google" 
+            className="w-5 h-5"
+          />
+          Google
+        </button>
 
           <div className="mt-6 pt-6 border-t border-slate-100 text-center">
             <button
