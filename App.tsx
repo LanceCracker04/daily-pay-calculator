@@ -9,6 +9,7 @@ import History from './pages/History';
 import Settings from './pages/Settings';
 import Login from './pages/Login';
 import { auth } from './firebase';
+import Onboarding from './pages/Onboarding';
 import { onAuthStateChanged, User } from 'firebase/auth';
 // Fix for the final error:
 import { Loader2 } from 'lucide-react';
@@ -100,13 +101,29 @@ const App: React.FC = () => {
     );
   }
 
+// RETURN 1: The Waiter (Loading State)
+  // This is already in your code near line 92
+  if (authLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-slate-50">
+        <div className="flex flex-col items-center gap-3">
+          <Loader2 className="w-10 h-10 text-emerald-500 animate-spin" />
+          <span className="text-slate-400 font-bold text-sm uppercase tracking-widest">Daily Pay</span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Router>
       {!user ? (
-        /* If NO user, show the Login page */
+        /* 1. Login Page: Completely isolated, no sidebar */
         <Login />
+      ) : !isDataLoaded ? (
+        /* 2. Onboarding: Isolated for new users, no sidebar */
+        <Onboarding onComplete={() => setIsDataLoaded(true)} />
       ) : (
-        /* If there IS a user, show the main app */
+        /* 3. Main App: Layout with sidebar only for established users */
         <Layout
           activeView={activeView}
           onViewChange={setActiveView}

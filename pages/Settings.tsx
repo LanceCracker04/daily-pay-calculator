@@ -11,6 +11,19 @@ import {
 import { UserSettings } from '../types';
 import { auth } from '../firebase';
 
+const CURRENCIES = [
+  { symbol: '₱', code: 'PHP', name: 'Philippine Peso' },
+  { symbol: '$', code: 'USD', name: 'US Dollar' },
+  { symbol: '£', code: 'GBP', name: 'British Pound' },
+  { symbol: '€', code: 'EUR', name: 'Euro' },
+  { symbol: '¥', code: 'JPY', name: 'Japanese Yen' },
+  { symbol: '₹', code: 'INR', name: 'Indian Rupee' },
+  { symbol: '₩', code: 'KRW', name: 'South Korean Won' },
+  { symbol: 'A$', code: 'AUD', name: 'Australian Dollar' },
+  { symbol: 'C$', code: 'CAD', name: 'Canadian Dollar' },
+  { symbol: '₪', code: 'ILS', name: 'Israeli Shekel' },
+];
+
 interface SettingsProps {
   settings: UserSettings;
   onUpdate: (settings: UserSettings) => void;
@@ -79,22 +92,31 @@ const Settings: React.FC<SettingsProps> = ({ settings, onUpdate, onClearData }) 
            
            <div className="space-y-4">
              <div>
-               <label className="flex items-center justify-between text-sm font-semibold mb-2">
-                 <span>Currency Symbol</span>
-                 <span className="text-slate-400">{settings.currency}</span>
-               </label>
-               <div className="grid grid-cols-4 gap-2">
-                 {['$', '£', '€', '¥'].map(symbol => (
-                   <button
-                     key={symbol}
-                     onClick={() => handleChange('currency', symbol)}
-                     className={`py-2 rounded-lg font-bold border-2 transition-all ${settings.currency === symbol ? 'border-emerald-500 bg-emerald-50 text-emerald-700' : 'border-slate-100 bg-slate-50 text-slate-400'}`}
-                   >
-                     {symbol}
-                   </button>
-                 ))}
-               </div>
-             </div>
+                <label className="flex items-center justify-between text-sm font-semibold mb-2">
+                  <span>Currency Configuration</span>
+                  <span className="text-emerald-500 font-bold">{settings.currency}</span>
+                </label>
+                
+                <select
+                  value={settings.currency}
+                  onChange={(e) => handleChange('currency', e.target.value)}
+                  className={`w-full p-3 rounded-xl border-2 font-medium transition-all outline-none focus:ring-2 focus:ring-emerald-500/20 ${
+                    isDark 
+                      ? 'bg-slate-700 border-slate-600 text-white' 
+                      : 'bg-slate-50 border-slate-100 text-slate-700'
+                  }`}
+                >
+                  {CURRENCIES.map((curr) => (
+                    <option key={curr.code} value={curr.symbol}>
+                      {curr.symbol} - {curr.name} ({curr.code})
+                    </option>
+                  ))}
+                </select>
+                
+                <p className="mt-2 text-[10px] text-slate-400 font-medium italic">
+                  * This symbol will be used for all financial tracking and history.
+                </p>
+              </div>
 
              <div>
                 <label className="flex items-center justify-between text-sm font-semibold mb-2">
